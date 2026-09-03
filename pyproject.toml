@@ -1,0 +1,57 @@
+# Tooling configuration only. Dependencies live in requirements*.txt so that the
+# Docker image and CI can install them without building the project as a package.
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "DJ",   # flake8-django
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "T20",  # flake8-print
+    "RUF",  # ruff-specific
+]
+ignore = [
+    "RUF012",  # Django class attributes are not immutable by convention
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["api", "catalog", "common", "config"]
+
+[tool.ruff.lint.per-file-ignores]
+# Star imports are the documented way to re-export models from sub-apps.
+"**/models/__init__.py" = ["F401", "F403"]
+"**/__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["test_*.py"]
+addopts = "--strict-markers --strict-config -q"
+testpaths = ["api", "catalog", "common"]
+
+[tool.coverage.run]
+branch = true
+source = ["api", "catalog", "common"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "config/*",
+    "manage.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]

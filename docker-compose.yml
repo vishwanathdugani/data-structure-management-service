@@ -1,0 +1,25 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_DEBUG: "false"
+      DJANGO_SECRET_KEY: "docker-compose-development-key"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+      DJANGO_SQLITE_PATH: "data/db.sqlite3"
+      # DEBUG is off, so the production security settings apply. HTTPS redirection is the
+      # one that has to be turned back off: this is served over http://localhost.
+      DJANGO_SECURE_SSL_REDIRECT: "false"
+    volumes:
+      # Named volume, so the catalog survives `docker compose down` and rebuilds.
+      - catalog-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/v2/catalog/datasets/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  catalog-data:

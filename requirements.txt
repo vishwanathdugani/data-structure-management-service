@@ -1,0 +1,9 @@
+# Runtime dependencies.
+# Pinned to exact versions so that local, CI and Docker runs are reproducible.
+Django==5.2.17
+djangorestframework==3.18.0
+django-filter==26.1
+drf-spectacular==0.30.0
+
+# WSGI server used by the Docker image. Not needed for `manage.py runserver`.
+gunicorn==26.2.0
