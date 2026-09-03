@@ -1,7 +1,7 @@
 """Version 2 URL root.
 
-Each app owns its own URL module and is mounted here under its app segment, giving the
-`/v2/<app>/<resource>s/` shape the style guide asks for.
+Each app owns its own URL module and is mounted here under its app segment, giving every
+route the `/v2/<app>/<resource>s/` shape.
 """
 
 from django.urls import include, path

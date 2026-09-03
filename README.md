@@ -362,7 +362,7 @@ regress into an N+1.
 
 ## API reference
 
-Every URL follows the style guide: kebab-case segments, plural resource names, nested
+Every URL follows one shape: kebab-case segments, plural resource names, nested
 resources under their parent, non-CRUD operations under `actions/`.
 
 | Method | Path | Purpose |
@@ -391,10 +391,10 @@ field should be told, not handed a differently-sorted page that looks plausible.
 always appended to the sort, because paging over a non-unique key such as `name` otherwise
 lets the database break ties differently between pages, silently repeating and skipping rows.
 
-**Nesting.** The dataset detail endpoint is the one nested response, at the style guide's
-one-level cap. It earns it: "show me this entity's structure" is the question that endpoint
-exists to answer, and splitting it would make every consumer write the same two-request
-dance. Everywhere else is flat — list responses carry `data_element_count` instead of the
+**Nesting.** Responses are capped at one level of nesting, and the dataset detail endpoint
+is the one response that uses it. It earns it: "show me this entity's structure" is the
+question that endpoint exists to answer, and splitting it would make every consumer write
+the same two-request dance. Everywhere else is flat — list responses carry `data_element_count` instead of the
 elements themselves. The nested elements are a summary: inside its parent, an element's
 `dataset_uuid` is noise and its audit timestamps are not what the reader came for.
 
@@ -488,8 +488,8 @@ looks at `request.user`. What would need real thought is not authentication but
 authorisation — a catalog usually wants "anyone may read, the owning team may write", which
 means `owner` becomes a foreign key to a team rather than free text.
 
-**No multi-tenancy.** The style guide's examples are full of `tenant`, and a real deployment
-would scope every selector by it. Adding it later means a `tenant` foreign key, a `tenant`
+**No multi-tenancy.** A real deployment would almost certainly scope every selector by a
+tenant. Adding it later means a `tenant` foreign key, a `tenant`
 argument on the selectors, and folding it into the two uniqueness constraints — which is
 routine precisely because all reads already go through selectors. Building it now, with no
 tenant model to attach it to, would have been guessing.
@@ -516,8 +516,8 @@ cost visible.
 instead of a validation error naming a field — and "which one was wrong" is the only thing
 the caller needs to know. At a ceiling of 100 rows, inside one transaction, correctness wins.
 
-**Ordering is not on the model's `Meta`.** Per the style guide's note, default ordering lives
-in the `OrderingService` for each endpoint. A model-level default silently applies to every
+**Ordering is not on the model's `Meta`.** Default ordering lives in each endpoint's
+`OrderingService` instead. A model-level default silently applies to every
 query in the codebase, including aggregates where it does nothing but add a sort.
 
 **SQLite.** As the assignment allows. Everything used here — functional unique indexes,
@@ -563,6 +563,6 @@ Two things I would change about what is already here, given more time:
 ## Time spent
 
 Roughly five hours, against the assignment's 3–5 hour guidance. The bulk of it went to the
-constraint and rule design and to the tests that pin them; the layering follows the provided
-style guide, and the enhancements (PII, retention/lifecycle, filtering, OpenAPI, Docker) were
-each small once that structure was in place.
+constraint and rule design and to the tests that pin them; the layering was settled early,
+and the enhancements (PII, retention/lifecycle, filtering, OpenAPI, Docker) were each small
+once that structure was in place.

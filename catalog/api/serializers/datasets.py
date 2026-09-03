@@ -7,7 +7,7 @@ the API returns, and `__all__` eventually publishes something nobody meant to pu
 Spelling the fields out makes the contract a decision rather than a side effect, and it is
 visible in review when it changes.
 
-Identifier naming follows the style guide: a resource's own primary key is
+Identifier naming is consistent across the API: a resource's own primary key is
 `<model_name>_uuid`, and a reference to another resource is `<resource>_uuid`.
 """
 
@@ -47,10 +47,10 @@ class DatasetDetailSerializer(DatasetSerializer):
     """
     A dataset together with its data elements -- the one nested response in this API.
 
-    The style guide caps nesting at one level, and this sits exactly at that cap. It earns
-    the nesting because "show me this entity's structure" is the single question the detail
-    endpoint exists to answer, and answering it in two round trips would make every
-    consumer write the same two-request dance.
+    Responses are capped at one level of nesting, and this sits exactly at that cap. It
+    earns the nesting because "show me this entity's structure" is the single question
+    the detail endpoint exists to answer, and answering it in two round trips would make
+    every consumer write the same two-request dance.
 
     The nested shape is a summary rather than the full data element representation: inside
     its parent, an element's `dataset_uuid` is noise, and its audit timestamps are not what

@@ -1,9 +1,9 @@
 """
 Catalog URLs.
 
-Shapes follow the style guide: kebab-case segments, plural resource names, nested
-resources under their parent, and non-CRUD operations under an `actions/` segment so they
-can never be mistaken for a resource.
+URL shapes are consistent across the service: kebab-case segments, plural resource names,
+nested resources under their parent, and non-CRUD operations under an `actions/` segment so
+they can never be mistaken for a resource.
 
     /v2/catalog/datasets/
     /v2/catalog/datasets/{dataset_uuid}/
